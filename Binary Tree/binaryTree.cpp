@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <assert.h>
 
 
@@ -68,6 +69,30 @@ class BinaryTree{
 
     }
 
+    void Level_order_traversal(TreeNode* root)
+    {
+        queue<TreeNode*> nodes ; 
+        nodes.push(root);
+        int level = 0 ;
+        while(!nodes.empty())
+        {
+        cout<<"level : "<<level<<endl;
+        int sz = nodes.size();
+        while(sz--)
+        {
+            TreeNode* cur = nodes.front();
+            nodes.pop();
+            cout<<cur->data<<" ";
+            if(cur->left)
+            nodes.push(cur->left);
+            if(cur->right)
+            nodes.push(cur->right);
+        }
+        cout<<endl;
+        ++level;
+        }
+    }
+
 
 
 
@@ -116,14 +141,62 @@ class Solutions{
             return targetSum == sum ;
          }
          return _hasPathSum(root->left , targetSum , sum)||
-        _hasPathSum(root->right , targetSum , sum);
-
-        
-         
+        _hasPathSum(root->right , targetSum , sum);   
     }
     bool hasPathSum(TreeNode* root, int targetSum) {
         return _hasPathSum(root , targetSum , 0);
     }
+    // p4 : 
+    bool isLeaf(TreeNode *node) {
+	return node && !node->left && !node->right;
+    }   
+    int sumOfLeftLeaves(struct TreeNode *root) {
+		if (!root)
+			return 0;
+
+		int sum = 0;
+		if (isLeaf(root->left))
+			sum += root->left->data;
+
+		sum += sumOfLeftLeaves(root->left);
+		sum += sumOfLeftLeaves(root->right);
+
+		return sum;
+	}   
+    // p5 : 
+    int heightOfTree(TreeNode* root)
+    {
+        if(!root)
+        return 0 ;
+
+        int L = heightOfTree(root->left);
+        int R = heightOfTree(root->right);
+
+        return max(L,R)+1;
+
+    }
+    bool isPerfect(TreeNode* root , int h )
+    {
+        if(isLeaf(root))
+        return h == 0;
+
+        if(!root->left && root->right || !root->right && root->left )
+        return false ;
+
+        return isPerfect(root->left , h-1 ) && isPerfect(root->right , h-1);
+
+    }
+    bool isPerfect(TreeNode* root )
+    {
+        return isPerfect(root , heightOfTree(root));
+
+    }
+
+    //::::::::::::::::::::::::::::::::::: homework 2 :::::::::::::::::::::::::::::::::::::::::::::
+
+    // 
+    
+
 
 
 
@@ -144,13 +217,16 @@ int main()
 	tree.add( { 2, 4, 7 }, { 'L', 'L', 'L' });
 	tree.add( { 2, 4, 8 }, { 'L', 'L', 'R' });
 	tree.add( { 2, 5, 9 }, { 'L', 'R', 'R' });
-	tree.add( { 3, 6, 10 }, { 'R', 'R', 'L' });
+    tree.add( {3,5,22} , {'R', 'R','L'});
+    
+    tree.Level_order_traversal(tree.root);
 
-	tree.printInorder();
-    cout<<endl;
-	// 7 4 8 2 5 9 1 3 10 6
+	
+    
+  
+	
 
-    cout<<Solutions().treeMax(tree.root);
+    
    
 
     
