@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <deque>
 #include <assert.h>
 
 
@@ -194,7 +195,73 @@ class Solutions{
 
     //::::::::::::::::::::::::::::::::::: homework 2 :::::::::::::::::::::::::::::::::::::::::::::
 
-    // 
+    // p3 :
+    int maxSoFar = 0 ; 
+    int heightOfTree(TreeNode* root)
+    {
+        if(!root)
+        return 0 ;
+
+        int Lh = heightOfTree(root->left);
+        int Rh = heightOfTree(root->right);
+
+        maxSoFar = max(maxSoFar,Lh+Rh);
+
+        return 1+max(Lh,Rh);
+
+
+    }
+    int diemeterOfTree(TreeNode* root)
+    {
+        if(!root)
+        return 0 ;
+
+        heightOfTree(root);
+        return maxSoFar;
+    }
+    // p1 : 
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int>> results;
+        if (!root) return results; 
+        
+        deque<TreeNode*> nodes;
+        nodes.push_back(root);
+        bool forwardLevel = true;
+        
+        while (!nodes.empty()) {
+            int sz = nodes.size();
+            vector<int> result;
+            while (sz--) {
+                TreeNode* cur = nullptr;
+                if (forwardLevel) {
+                    cur = nodes.front();
+                    nodes.pop_front();
+
+                    if (cur->left)
+                        nodes.push_back(cur->left);
+                    if (cur->right)
+                        nodes.push_back(cur->right);
+                } else {
+                    cur = nodes.back();
+                    nodes.pop_back();
+
+                    if (cur->right)
+                        nodes.push_front(cur->right);
+                    if (cur->left)
+                        nodes.push_front(cur->left);
+                }
+                result.push_back(cur->data);
+            }
+            forwardLevel = !forwardLevel;
+            results.push_back(result);
+        }
+
+        return results;
+    }
+    // p2 : 
+    
+    
+
     
 
 
