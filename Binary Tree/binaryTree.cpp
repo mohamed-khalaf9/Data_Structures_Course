@@ -2,6 +2,7 @@
 #include <vector>
 #include <queue>
 #include <deque>
+#include <string>
 #include <assert.h>
 
 
@@ -92,6 +93,58 @@ class BinaryTree{
         cout<<endl;
         ++level;
         }
+    }
+
+    string parenthesize(TreeNode* root)
+    {
+        if(!root)
+        return "()";
+
+        string rep = "(" + to_string(root->data);
+
+        if(root->left)
+        rep += parenthesize(root->left);
+        else
+        rep += "()";
+
+        if(root->right)
+        rep += parenthesize(root->right);
+        else
+        rep += "()";
+
+        rep += ")";
+
+        return rep;
+    }
+
+    string parenthesize_canonical(TreeNode* root)
+    {
+        if(!root)
+        return "()";
+
+        string rep = "("+to_string(root->data);
+
+        vector<string> v ;
+
+        if(root->left)
+        v.push_back(parenthesize_canonical(root->left));
+        else
+        v.push_back("()");
+        if(root->right)
+        v.push_back(parenthesize_canonical(root->right));
+        else
+        v.push_back("()");
+
+        sort(v.begin(),v.end());
+        for(int i = 0 ;i<(int)v.size();i++)
+        {
+            rep+=v[i];
+        }
+
+        rep+=")";
+
+        return rep;
+
     }
 
 
@@ -197,7 +250,7 @@ class Solutions{
 
     // p3 :
     int maxSoFar = 0 ; 
-    int heightOfTree(TreeNode* root)
+    /*int heightOfTree(TreeNode* root)
     {
         if(!root)
         return 0 ;
@@ -211,6 +264,7 @@ class Solutions{
 
 
     }
+    */
     int diemeterOfTree(TreeNode* root)
     {
         if(!root)
@@ -259,7 +313,48 @@ class Solutions{
         return results;
     }
     // p2 : 
+    bool isCompleteTree(TreeNode* root) {
+		queue<TreeNode*> nodes ; 
+        nodes.push(root);
+
+        bool noMoreAllowed = false;
+
+        while(!nodes.empty())
+        {
+            int sz = nodes.size();
+
+            while(sz--)
+            {
+                TreeNode* cur = nodes.front();
+                nodes.pop();
+
+                if(cur->left)
+                {
+                    if(noMoreAllowed)
+                    return false;
+                    
+                nodes.push(cur->left);
+                }
+                else
+                noMoreAllowed = true;
+
+                if(cur->right){
+                    if(noMoreAllowed)
+                    return false;
+                nodes.push(cur->right);
+                
+                }
+                else
+                noMoreAllowed = true; 
+            }
+
+        }
+        return true;
+    }
     
+    //::::::::::::::::::::::::::::::::::: homework 3 ::::::::::::::::::::::::::::::::::::::::::::::::::
+    
+    // 
     
 
     
@@ -286,8 +381,7 @@ int main()
 	tree.add( { 2, 5, 9 }, { 'L', 'R', 'R' });
     tree.add( {3,5,22} , {'R', 'R','L'});
     
-    tree.Level_order_traversal(tree.root);
-
+    cout<<tree.parenthesize(tree.root);
 	
     
   
