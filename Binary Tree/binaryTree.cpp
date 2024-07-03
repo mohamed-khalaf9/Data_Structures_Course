@@ -354,7 +354,75 @@ class Solutions{
     
     //::::::::::::::::::::::::::::::::::: homework 3 ::::::::::::::::::::::::::::::::::::::::::::::::::
     
-    // 
+    // p1 : s1:
+    bool isMiror(TreeNode* first , TreeNode* second)
+    {
+        if(!first && !second)
+        return true;
+
+        if(!first && second || first && !second || first->data != second->data)
+        return false;
+
+        return isMiror(first->left , second->right) && isMiror(first->right , second->left);
+    }
+    bool isSymmetric(TreeNode* root) {
+        if(!root)
+        return false;
+        return isMiror(root->left,root->right);
+
+    }
+    // p1 : s2 : 
+
+    // p2 : 
+    string parenthesize_canonical(TreeNode* root)
+    {
+        if(!root)
+        return "()";
+
+        string rep = "("+to_string(root->data);
+
+        vector<string> v ;
+
+        if(root->left)
+        v.push_back(parenthesize_canonical(root->left));
+        else
+        v.push_back("()");
+        if(root->right)
+        v.push_back(parenthesize_canonical(root->right));
+        else
+        v.push_back("()");
+
+        sort(v.begin(),v.end());
+        for(int i = 0 ;i<(int)v.size();i++)
+        {
+            rep+=v[i];
+        }
+
+        rep+=")";
+
+        return rep;
+
+    }
+    bool flipEquiv(TreeNode* root1, TreeNode* root2) {
+        if(!root1 && !root2)
+        return true;
+        if(!root1 || !root2)
+        return false;
+
+        string rep1 = parenthesize_canonical(root1);
+        string rep2 = parenthesize_canonical(root2);
+
+        return rep1 == rep2 ;
+        
+    }
+
+    // p3 : 
+    
+
+
+
+    
+
     
 
     
