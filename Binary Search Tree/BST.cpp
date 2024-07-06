@@ -148,6 +148,51 @@ class Solutions{
         return minDiff;
        
     }
+    // p1 : 
+     bool isValidBst(TreeNode* root , long long mn = LLONG_MIN , long long mx = LLONG_MAX)
+    {
+        bool status = mn < root->val && root->val < mx ;
+        if(!status)
+        return false;
+
+        bool isLeft = !root->left || isValidBst(root->left , mn , root->val);
+        if(!isLeft)
+        return false;
+
+        bool isRight = !root->right || isValidBst(root->right , root->val , mx);
+        return isRight;
+         
+    }
+    bool isValidBST(TreeNode* root) {
+        if(!root)
+        return true;
+        return isValidBst(root);
+       
+
+       
+        
+    }
+    // p2 : 
+      void inorder(TreeNode* root, vector<int>& nodes)
+    {
+        if(!root)
+        return ;
+        inorder(root->left,nodes);
+        nodes.push_back(root->val);
+        inorder(root->right,nodes);
+    }
+    
+    int kthSmallest(TreeNode* root, int k) {
+        if(!root)
+        return 0 ;
+        vector<int> nodes;
+        inorder(root,nodes);
+        k = k-1;
+        return nodes[k];
+
+        
+    }
+    // 
 
 
 
