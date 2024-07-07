@@ -192,7 +192,35 @@ class Solutions{
 
         
     }
-    // 
+    // problem on leetcode : 
+     int curSum = 0;
+    bool isLeaf(TreeNode* root)
+    {
+        return root && !root->left && !root->right;
+    }
+    void sumNumbersHelper(TreeNode* root , int pathSum =0)
+    {
+        pathSum = pathSum * 10 + root->val;
+        if(isLeaf(root))
+        curSum += pathSum;
+
+        if(root->left)
+        sumNumbersHelper(root->left,pathSum);
+        if(root->right)
+        sumNumbersHelper(root->right,pathSum);
+
+    }
+    int sumNumbers(TreeNode* root) {
+        if(!root)
+        return 0;
+        sumNumbersHelper(root,0);
+        return curSum;
+        
+        
+        
+    }
+    //
+    
 
 
 
