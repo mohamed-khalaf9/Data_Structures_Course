@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 
 
 using namespace std;
@@ -219,7 +220,38 @@ class Solutions{
         
         
     }
-    //
+    // easy problem on leetcode : 
+    string canonical(TreeNode* root) {
+    if (!root) {
+        return "()";
+    }
+
+    string rep = "(" + to_string(root->val);
+
+    if (root->left) {
+        rep += canonical(root->left);
+    } else {
+        rep += "()";
+    }
+
+    if (root->right) {
+        rep += canonical(root->right);
+    } else {
+        rep += "()";
+    }
+
+    rep += ")";
+
+    return rep;
+}
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+       
+        string repP = canonical(p);
+        string repQ = canonical(q);
+
+        return repP == repQ;
+        
+    }
     
 
 
