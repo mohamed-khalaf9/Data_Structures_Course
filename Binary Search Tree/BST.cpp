@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <queue>
 
 
 using namespace std;
@@ -267,6 +268,38 @@ class Solutions{
         return root;
         
     }
+    // solved problem on leetcode 
+     vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        if(!root) return res;
+        queue<TreeNode*> nodes ;
+        nodes.push(root);
+
+        while(!nodes.empty())
+        {
+            int sz = nodes.size();
+            vector<int> levelN;
+            while(sz--)
+            {
+                TreeNode* cur = nodes.front();
+                nodes.pop();
+
+                if(cur->left)
+                nodes.push(cur->left);
+                if(cur->right)
+                nodes.push(cur->right);
+
+                levelN.push_back(cur->val);
+
+            }
+            res.push_back(levelN);
+           
+        }
+
+        return res;
+        
+    }
+
     
 
 
