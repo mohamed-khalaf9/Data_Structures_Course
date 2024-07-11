@@ -299,6 +299,39 @@ class Solutions{
         return res;
         
     }
+    // just med problem on leetcode : 
+     vector<int> rightSideView(TreeNode* root) {
+        vector<int> res;
+        if(!root) return res;
+
+        deque<TreeNode*> nodes ;
+        nodes.push_back(root);
+        res.push_back(root->val);
+        
+        while(!nodes.empty())
+        {
+            int sz = nodes.size();
+            while(sz--)
+            {
+            TreeNode* cur = nodes.front();
+            nodes.pop_front();
+
+            if(cur->left)
+            nodes.push_back(cur->left);
+            if(cur->right)
+            nodes.push_back(cur->right);
+            }
+            if(nodes.empty())
+            break;
+            TreeNode* toBePushed = nodes.back();
+
+            res.push_back(toBePushed->val);
+        }
+
+        return res;
+    } 
+    // 
+    
 
     
 
