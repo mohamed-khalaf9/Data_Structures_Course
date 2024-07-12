@@ -330,7 +330,36 @@ class Solutions{
 
         return res;
     } 
+    // just easy problem on friday on leetcode 
+     vector<double> averageOfLevels(TreeNode* root) {
+        vector<double> res ;
+        if(!root) return res;
+        queue<TreeNode*> nodes ;
+        nodes.push(root);
+        double curCount = 0;
+        while(!nodes.empty())
+        {
+            int sz = nodes.size();
+            curCount = sz;
+            double sum = 0 ;
+            while(sz--)
+            {
+                TreeNode* cur = nodes.front();
+                nodes.pop();
+
+                if(cur->left)
+                nodes.push(cur->left);
+                if(cur->right)
+                nodes.push(cur->right);
+
+                sum += cur->val;
+            }
+            res.push_back(sum/curCount);
+        }
+        return res;
+    }
     // 
+    
     
 
     
