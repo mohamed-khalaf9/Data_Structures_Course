@@ -370,7 +370,17 @@ class Solutions{
 
 
 };
+// just one problem 
+ int countNodes(TreeNode* root) {
+        if(!root) return 0;
+        int res = 1 ;
+        if(root->left)
+        res += countNodes(root->left);
+        if(root->right)
+        res += countNodes(root->right);
 
+        return res; 
+    }
 
 
 
