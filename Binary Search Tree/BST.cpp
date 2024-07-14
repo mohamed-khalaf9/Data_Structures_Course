@@ -381,6 +381,35 @@ class Solutions{
 
         return res; 
     }
+    //
+      bool isLeaf(TreeNode* root) {
+    return root && !root->left && !root->right;
+}
+
+
+void getLeafSequence(TreeNode* root, std::vector<int> &leaves) {
+    if (!root) return;
+    
+    if (isLeaf(root)) {
+        leaves.push_back(root->val);
+    }
+
+    getLeafSequence(root->left, leaves);
+    getLeafSequence(root->right, leaves);
+}
+
+
+bool leafSimilar(TreeNode* root1, TreeNode* root2) {
+    std::vector<int> seq1, seq2;
+
+    getLeafSequence(root1, seq1);
+    getLeafSequence(root2, seq2);
+
+    return seq1 == seq2;
+        
+    }
+
+
 
 
 
