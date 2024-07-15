@@ -66,6 +66,100 @@ class BinarySearchTree{
         insert(root , target );
     }
 
+    int minValue(TreeNode* root)
+    {
+        while(cur && cur->left)
+        {
+            cur = cur->left;
+        }
+        return cur->val;
+    }
+    bool findChain(TreeNode* root , int target , vector<TreeNode*> & ancestors)
+    {
+        ancestors.push_back(root);
+
+        if(root->val == target)
+        return true;
+        if(target < root->val)
+        findChain(root->left,target,ancestors);
+
+        return root->right && findChain(root->right,target,ancestors);
+    }
+    
+    TreeNode* getNext(vector<TreeNode*>& ancestors)
+    {
+        if(ancestors.size() == 0)
+        return nullptr;
+        TreeNode* node = ancestors.back();
+        ancestors.pop_back();
+        return node;
+    }
+
+    pair<bool,int> succesor(int target)
+    {
+        vector<TreeNode*> ancestors ;
+
+        if(!findChain(root,target,ancestors))
+        return make_pair(false,-1);
+
+        TreeNode* child = getNext(ancestors);
+
+        if(child->right)
+        return make_pair(true,minValue(child->right));
+
+        TreeNode* parent = getNext(ancestors);
+
+        while(parent && parent->right == child)
+        {
+            child = parent ; 
+            parent = getNext(ancestors);
+        }
+        if(parent)
+        return make_pair(true,parent->val);
+
+        return make_pair(false,-1);
+    }
+    TreeNode* deletNode(TreeNode* root , int target)
+    {
+        root = delete_node(root,target);
+    }
+    TreeNode* delete_node(TreeNode* root , int target)
+    {
+        if(!root)
+        return nullptr;
+
+        if(target < root->val)
+        root->left = delete_node(root->left , target);
+        else if(target > root->val)
+        root->right = delete_node(root->right,target);
+        else
+        {
+            TreeNode* tmp = root;
+            if(!root->left && !root->right)
+            root = nullptr;
+            if(!root->right)
+            root = root->left;
+            if(!root->left)
+            root = root->right;
+            else
+            {
+                TreeNode* suc = minValue(root->right);
+                root->val = suc->val;
+                root->right = delete_node(root->right , root->val);
+                tmp = nullptr;
+            }
+            if(tmp)
+             delete tmp;
+        }
+
+        return root;
+        
+
+    }
+
+
+
+
 };
 
 class Solutions{
@@ -194,220 +288,29 @@ class Solutions{
 
         
     }
-    // problem on leetcode : 
-     int curSum = 0;
-    bool isLeaf(TreeNode* root)
-    {
-        return root && !root->left && !root->right;
-    }
-    void sumNumbersHelper(TreeNode* root , int pathSum =0)
-    {
-        pathSum = pathSum * 10 + root->val;
-        if(isLeaf(root))
-        curSum += pathSum;
-
-        if(root->left)
-        sumNumbersHelper(root->left,pathSum);
-        if(root->right)
-        sumNumbersHelper(root->right,pathSum);
-
-    }
-    int sumNumbers(TreeNode* root) {
-        if(!root)
-        return 0;
-        sumNumbersHelper(root,0);
-        return curSum;
-        
-        
-        
-    }
-    // easy problem on leetcode : 
-    string canonical(TreeNode* root) {
-    if (!root) {
-        return "()";
-    }
-
-    string rep = "(" + to_string(root->val);
-
-    if (root->left) {
-        rep += canonical(root->left);
-    } else {
-        rep += "()";
-    }
-
-    if (root->right) {
-        rep += canonical(root->right);
-    } else {
-        rep += "()";
-    }
-
-    rep += ")";
-
-    return rep;
-}
-    bool isSameTree(TreeNode* p, TreeNode* q) {
-       
-        string repP = canonical(p);
-        string repQ = canonical(q);
-
-        return repP == repQ;
-        
-    }
-    // one easy problem on leet code 
-     TreeNode* invertTree(TreeNode* root) {
-        if(!root)
-        return nullptr;
-
-        TreeNode* temp = root->left;
-        root->left = root->right;
-        root->right = temp ;
-
-        invertTree(root->left);
-        invertTree(root->right);
-
-        return root;
-        
-    }
-    // solved problem on leetcode 
-     vector<vector<int>> levelOrder(TreeNode* root) {
-        vector<vector<int>> res;
-        if(!root) return res;
-        queue<TreeNode*> nodes ;
-        nodes.push(root);
-
-        while(!nodes.empty())
-        {
-            int sz = nodes.size();
-            vector<int> levelN;
-            while(sz--)
-            {
-                TreeNode* cur = nodes.front();
-                nodes.pop();
-
-                if(cur->left)
-                nodes.push(cur->left);
-                if(cur->right)
-                nodes.push(cur->right);
-
-                levelN.push_back(cur->val);
-
-            }
-            res.push_back(levelN);
-           
-        }
-
-        return res;
-        
-    }
-    // just med problem on leetcode : 
-     vector<int> rightSideView(TreeNode* root) {
-        vector<int> res;
-        if(!root) return res;
-
-        deque<TreeNode*> nodes ;
-        nodes.push_back(root);
-        res.push_back(root->val);
-        
-        while(!nodes.empty())
-        {
-            int sz = nodes.size();
-            while(sz--)
-            {
-            TreeNode* cur = nodes.front();
-            nodes.pop_front();
-
-            if(cur->left)
-            nodes.push_back(cur->left);
-            if(cur->right)
-            nodes.push_back(cur->right);
-            }
-            if(nodes.empty())
-            break;
-            TreeNode* toBePushed = nodes.back();
-
-            res.push_back(toBePushed->val);
-        }
-
-        return res;
-    } 
-    // just easy problem on friday on leetcode 
-     vector<double> averageOfLevels(TreeNode* root) {
-        vector<double> res ;
-        if(!root) return res;
-        queue<TreeNode*> nodes ;
-        nodes.push(root);
-        double curCount = 0;
-        while(!nodes.empty())
-        {
-            int sz = nodes.size();
-            curCount = sz;
-            double sum = 0 ;
-            while(sz--)
-            {
-                TreeNode* cur = nodes.front();
-                nodes.pop();
-
-                if(cur->left)
-                nodes.push(cur->left);
-                if(cur->right)
-                nodes.push(cur->right);
-
-                sum += cur->val;
-            }
-            res.push_back(sum/curCount);
-        }
-        return res;
-    }
-    // 
-    
-    
-
-    
-
-
-
-
-
-
-};
-// just one problem 
- int countNodes(TreeNode* root) {
-        if(!root) return 0;
-        int res = 1 ;
-        if(root->left)
-        res += countNodes(root->left);
-        if(root->right)
-        res += countNodes(root->right);
-
-        return res; 
-    }
     //
-      bool isLeaf(TreeNode* root) {
-    return root && !root->left && !root->right;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
-
-
-void getLeafSequence(TreeNode* root, std::vector<int> &leaves) {
-    if (!root) return;
-    
-    if (isLeaf(root)) {
-        leaves.push_back(root->val);
-    }
-
-    getLeafSequence(root->left, leaves);
-    getLeafSequence(root->right, leaves);
-}
-
-
-bool leafSimilar(TreeNode* root1, TreeNode* root2) {
-    std::vector<int> seq1, seq2;
-
-    getLeafSequence(root1, seq1);
-    getLeafSequence(root2, seq2);
-
-    return seq1 == seq2;
-        
-    }
 
 
 
@@ -423,5 +326,7 @@ bool leafSimilar(TreeNode* root1, TreeNode* root2) {
 
 int main()
 {
+
+
     return 0 ;
 }
