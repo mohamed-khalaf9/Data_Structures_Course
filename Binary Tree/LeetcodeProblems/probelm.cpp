@@ -50,3 +50,25 @@
 
         return result;
     }
+    //
+     void flatten(TreeNode* root) {
+        if (!root) return;
+
+        TreeNode* curr = root;
+        while (curr) {
+            if (curr->left) {
+                // Find the rightmost node in the left subtree
+                TreeNode* rightmost = curr->left;
+                while (rightmost->right) {
+                    rightmost = rightmost->right;
+                }
+                // Connect the rightmost node of the left subtree to the right subtree
+                rightmost->right = curr->right;
+                // Move the left subtree to the right
+                curr->right = curr->left;
+                curr->left = nullptr;
+            }
+            // Move to the next node in the "linked list"
+            curr = curr->right;
+        }
+    }
